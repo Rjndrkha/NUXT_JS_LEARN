@@ -31,14 +31,12 @@ export const useCartStore = defineStore("cart", () => {
       const mergedItems = await Promise.all(
         userCart.products.map(async (item: CartItem) => {
           const product = await $fetch<Product>(
-            `https://fakestoreapi.com/products/${item.id}`
+            `https://fakestoreapi.com/products/${item.productId}`
           );
           return { ...item, product };
         })
       );
-      console.log(mergedItems);
       items.value = mergedItems;
-
     } catch (err) {
       console.error(err);
       cartId.value = null;
@@ -66,7 +64,7 @@ export const useCartStore = defineStore("cart", () => {
       return;
     }
 
-    const exists = items.value.find((p) => p.id === product.id);
+    const exists = items.value.find((p) => p.productId === product.productId);
 
     if (!exists) {
       items.value.push(product);
@@ -87,7 +85,7 @@ export const useCartStore = defineStore("cart", () => {
   const removeProduct = async (productId: number) => {
     if (!cartId.value) return;
 
-    items.value = items.value.filter((p) => p.id !== productId);
+    items.value = items.value.filter((p) => p.productId !== productId);
 
     await $fetch(`https://fakestoreapi.com/carts/${cartId.value}`, {
       method: "PUT",
