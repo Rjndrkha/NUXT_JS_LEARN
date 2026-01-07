@@ -23,7 +23,10 @@ export const useUsersStore = defineStore("users", () => {
   const addUser = async (payload: Partial<User>) => {
     await $fetch("https://fakestoreapi.com/users", {
       method: "POST",
-      body: payload,
+      body: {
+        id: users.value.length + 1,
+        ...payload,
+      },
     });
     await fetchUsers();
   };

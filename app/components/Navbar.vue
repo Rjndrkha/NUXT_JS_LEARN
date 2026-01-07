@@ -4,11 +4,9 @@ import { useRoute, useRouter } from "vue-router";
 import { useAuthStore } from "~/stores/auth";
 
 const route = useRoute();
-const router = useRouter();
 const auth = useAuthStore();
 const toast = useToast();
 
-// navigation menu items tanpa onClick
 const items = computed(() => {
   const menu: { label: string; to: string; active?: boolean }[] = [
     { label: "Cart", to: "/cart", active: route.path === "/cart" },
@@ -47,6 +45,7 @@ const handleLogout = () => {
   <UHeader>
     <template #title>
       <Logo class="h-6 w-auto" src="/logo.svg" />
+      <NuxtLink to="/" class="text-lg font-bold">Learn Shop</NuxtLink>
     </template>
 
     <UNavigationMenu :items="items" />
