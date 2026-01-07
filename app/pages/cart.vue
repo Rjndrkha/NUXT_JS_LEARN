@@ -1,31 +1,32 @@
 <script setup lang="ts">
-import { useAuthStore } from "~/stores/auth";
-import type { CartItem } from "~/types/cart";
+import { onMounted, computed } from "vue";
+import { useCartStore } from "~/stores/cart";
+import CartItem from "~/components/CartItem.vue";
 
 const cart = useCartStore();
-const auth = useAuthStore();
 
-/**
- * Redirect jika belum login
- */
 onMounted(async () => {
-  await cart.getCart(1); // User ID 1 untuk guest cart
+  await cart.getCart(1);
 });
 
-/**
- * Total harga
- */
+// total harga
 const total = computed(() =>
-  cart.items.reduce((sum, item: CartItem) => {
+  cart.items.reduce((sum, item) => {
     if (!item.product) return sum;
     return sum + item.product.price * item.quantity;
   }, 0)
 );
 
+// checkout simulasi
 const checkout = async () => {
   await cart.deleteCart();
   navigateTo("/checkout");
 };
+
+// handler untuk CartItem emit
+const handleIncrease = (productId: number) => cart.increaseQuantity(productId);
+const handleDecrease = (productId: number) => cart.decreaseQuantity(productId);
+const handleRemove = (productId: number) => cart.removeProduct(productId);
 </script>
 
 <template>
@@ -39,41 +40,14 @@ const checkout = async () => {
 
     <!-- Items -->
     <div v-else class="space-y-4">
-      <UCard
+      <CartItem
         v-for="item in cart.items"
         :key="item.productId"
-        class="flex gap-4 items-center"
-      >
-        <img
-          v-if="item.product"
-          :src="item.product.image"
-          class="h-20 w-20 object-contain"
-        />
-
-        <div class="flex-1">
-          <h3 class="font-medium" v-if="item.product">
-            {{ item.product.title }}
-          </h3>
-
-          <p class="text-primary font-bold mt-1" v-if="item.product">
-            ${{ item.product.price }}
-          </p>
-
-          <div class="flex items-center gap-2 mt-2">
-            <span>Qty: {{ item.quantity }}</span>
-
-            <UButton
-              size="xs"
-              color="error"
-              variant="ghost"
-              class="ml-auto"
-              @click="cart.removeProduct(item.productId)"
-            >
-              Remove
-            </UButton>
-          </div>
-        </div>
-      </UCard>
+        :item="{ product: item.product, quantity: item.quantity }"
+        @increase="handleIncrease(item.productId)"
+        @decrease="handleDecrease(item.productId)"
+        @remove="handleRemove(item.productId)"
+      />
 
       <!-- Summary -->
       <div class="flex justify-between items-center border-t pt-4 mt-6">

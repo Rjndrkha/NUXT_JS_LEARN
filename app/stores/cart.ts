@@ -3,7 +3,6 @@ import type { CartItem, Cart } from "~/types/cart";
 import type { Product } from "~/types/product";
 
 export const useCartStore = defineStore("cart", () => {
-  // STATE
   const cartId = ref<number | null>(null);
   const items = ref<CartItem[]>([]);
   const loading = ref(false);
@@ -43,6 +42,23 @@ export const useCartStore = defineStore("cart", () => {
       items.value = [];
     } finally {
       loading.value = false;
+    }
+  };
+
+  const increaseQuantity = (productId: number) => {
+    const item = items.value.find((i) => i.productId === productId);
+    if (item) item.quantity += 1;
+  };
+
+  const decreaseQuantity = (productId: number) => {
+    const item = items.value.find((i) => i.productId === productId);
+    if (item) {
+      if (item.quantity > 1) {
+        item.quantity -= 1;
+      } else {
+        // Kalau 1, hapus dari cart
+        items.value = items.value.filter((i) => i.productId !== productId);
+      }
     }
   };
 
@@ -115,5 +131,7 @@ export const useCartStore = defineStore("cart", () => {
     addProduct,
     removeProduct,
     deleteCart,
+    increaseQuantity,
+    decreaseQuantity,
   };
 });

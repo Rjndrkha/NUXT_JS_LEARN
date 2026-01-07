@@ -18,5 +18,19 @@ export const useProductsStore = defineStore("products", {
         this.loading = false;
       }
     },
+
+    async fetchProductById(id: number) {
+      this.loading = true;
+      try {
+        const product = await $fetch(`https://fakestoreapi.com/products/${id}`);
+        return product;
+      } catch (err: any) {
+        this.error = err.message;
+        return null;
+      } finally {
+        this.loading = false;
+      }
+    },               
   },
 });
+
