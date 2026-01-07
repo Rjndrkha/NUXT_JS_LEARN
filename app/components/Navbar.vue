@@ -11,13 +11,15 @@ const toast = useToast();
 // navigation menu items tanpa onClick
 const items = computed(() => {
   const menu: { label: string; to: string; active?: boolean }[] = [
-    {
-      label: "Admin Dashboard",
-      to: "/admin",
-      active: route.path.startsWith("/admin"),
-    },
     { label: "Cart", to: "/cart", active: route.path === "/cart" },
   ];
+  if (auth.isLoggedIn) {
+    menu.push({
+      label: "Admin Dashboard",
+      to: "/admin",
+      active: route.path === "/admin",
+    });
+  }
 
   if (!auth.isLoggedIn) {
     menu.push({
