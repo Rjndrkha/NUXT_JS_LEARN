@@ -18,7 +18,7 @@ const emit = defineEmits<{
 <template>
   <UCard>
     <div class="flex flex-row gap-4 items-center bg-gray-700">
-      <div class="bg-white flex flex-column justify-center p-2">
+      <div class="flex flex-column justify-center p-2">
         <img
           v-if="item.product"
           :src="item.product.image"

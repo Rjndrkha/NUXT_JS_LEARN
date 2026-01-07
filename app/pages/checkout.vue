@@ -4,11 +4,12 @@ import { useCartStore } from "~/stores/cart";
 
 const cart = useCartStore();
 
-// Ambil snapshot items terakhir sebelum dihapus
-// Kalau sudah deleteCart() dijalankan, gunakan empty array
+onMounted(async () => {
+  await cart.getCart(1);
+});
 const items = computed(() => cart.items);
 
-// Total harga
+
 const total = computed(() =>
   items.value.reduce((sum, item) => {
     if (!item.product) return sum;

@@ -7,9 +7,6 @@ export const useCartStore = defineStore("cart", () => {
   const items = ref<CartItem[]>([]);
   const loading = ref(false);
 
-  /**
-   * Ambil cart by userId
-   */
   const getCart = async (userId: number) => {
     loading.value = true;
 
@@ -26,7 +23,6 @@ export const useCartStore = defineStore("cart", () => {
 
       cartId.value = userCart.id;
 
-      // Ambil detail product per productId
       const mergedItems = await Promise.all(
         userCart.products.map(async (item: CartItem) => {
           const product = await $fetch<Product>(
@@ -56,15 +52,11 @@ export const useCartStore = defineStore("cart", () => {
       if (item.quantity > 1) {
         item.quantity -= 1;
       } else {
-        // Kalau 1, hapus dari cart
         items.value = items.value.filter((i) => i.productId !== productId);
       }
     }
   };
 
-  /**
-   * Add product (local simulasi)
-   */
   const addProduct = async (product: CartItem, userId: number) => {
     if (!cartId.value) {
       const cart = await $fetch<Cart>("https://fakestoreapi.com/carts", {
@@ -95,9 +87,6 @@ export const useCartStore = defineStore("cart", () => {
     });
   };
 
-  /**
-   * Remove product
-   */
   const removeProduct = async (productId: number) => {
     if (!cartId.value) return;
 
@@ -109,9 +98,6 @@ export const useCartStore = defineStore("cart", () => {
     });
   };
 
-  /**
-   * Checkout (delete cart)
-   */
   const deleteCart = async () => {
     if (!cartId.value) return;
 

@@ -9,18 +9,11 @@ import type { button } from "#build/ui";
 import { tr } from "zod/locales";
 import { data } from "autoprefixer";
 
-// Toast
 const toast = useToast();
-
-// Tab
-const activeTab = ref<"products" | "users">("products");
-
-// Stores
 const productsStore = useProductsStore();
 const usersStore = useUsersStore();
 
-// --- Product Modal ---
-const showProductModal = ref(false);
+const activeTab = ref<"products" | "users">("products");
 const productForm = reactive<Partial<Product>>({});
 const isEditingProduct = ref(false);
 
@@ -60,7 +53,6 @@ const deleteProduct = async (id: number) => {
   });
 };
 
-// --- User Modal ---
 const showUserModal = ref(false);
 const userForm = reactive<Partial<User>>({});
 
@@ -101,7 +93,6 @@ const deleteUser = async (id: number) => {
   });
 };
 
-// Load data
 onMounted(() => {
   productsStore.fetchProducts();
   usersStore.fetchUsers();
